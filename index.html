@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrescitaX - Habit Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QN0NSK8KVK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-QN0NSK8KVK');
+</script>
+</head>
+<body>
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <button class="hamburger-btn" id="hamburgerBtn">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        <h1 class="app-title">CrescitaX</h1>
+        <div class="header-spacer"></div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">CrescitaX</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <button class="nav-item active" data-section="dashboard">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Dashboard</span>
+            </button>
+            <button class="nav-item" data-section="calendario">
+                <span class="nav-icon">📅</span>
+                <span class="nav-label">Calendario</span>
+            </button>
+            <button class="nav-item" data-section="statistiche">
+                <span class="nav-icon">📈</span>
+                <span class="nav-label">Statistiche</span>
+            </button>
+            <button class="nav-item" data-section="grafici">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Grafici</span>
+            </button>
+            <button class="nav-item" data-section="status">
+                <span class="nav-icon">🏆</span>
+                <span class="nav-label">Status</span>
+            </button>
+            <button class="nav-item" data-section="riflessioni">
+                <span class="nav-icon">💭</span>
+                <span class="nav-label">Riflessioni</span>
+            </button>
+            <button class="nav-item" data-section="backup">
+                <span class="nav-icon">💾</span>
+                <span class="nav-label">Backup</span>
+            </button>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <section class="section active" id="dashboard">
+            <div class="section-header">
+                <h2>📊 Dashboard</h2>
+                <button class="btn btn--primary" id="addHabitBtn">+ Aggiungi Nuova Abitudine</button>
+            </div>
+            <div class="habits-grid" id="habitsGrid">
+                <div class="empty-state card" id="emptyState">
+                    <div class="empty-state-icon">🌱</div>
+                    <h3>Inizia creando la tua prima abitudine!</h3>
+                    <p>Clicca su "Aggiungi Nuova Abitudine" per iniziare il tuo percorso di crescita personale.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calendario Section -->
+        <section class="section" id="calendario">
+            <div class="section-header">
+                <h2>📅 Calendario</h2>
+                <div class="calendar-nav">
+                    <button class="btn btn--outline btn--sm" id="prevMonth">‹</button>
+                    <span class="current-month" id="currentMonth">Agosto 2025</span>
+                    <button class="btn btn--outline btn--sm" id="nextMonth">›</button>
+                </div>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+        </section>
+
+        <!-- Statistiche Section -->
+        <section class="section" id="statistiche">
+            <div class="section-header">
+                <h2>📈 Statistiche</h2>
+            </div>
+            <div class="stats-cards" id="statsCards">
+                <div class="card">
+                    <h3>Abitudini Totali</h3>
+                    <div class="stat-value" id="totalHabits">0</div>
+                </div>
+                <div class="card">
+                    <h3>Completamenti Oggi</h3>
+                    <div class="stat-value" id="todayCompletions">0</div>
+                </div>
+                <div class="card">
+                    <h3>Percentuale Media</h3>
+                    <div class="stat-value" id="averagePercentage">0%</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card__body">
+                    <table class="stats-table" id="statsTable">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Totale</th>
+                                <th>Completamenti</th>
+                                <th>Percentuale</th>
+                                <th>Streak</th>
+                                <th>Record</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Grafici Section -->
+        <section class="section" id="grafici">
+            <div class="section-header">
+                <h2>📊 Grafici</h2>
+                <div class="chart-filters">
+                    <button class="btn btn--outline btn--sm active" id="numbersFilter">Numeri</button>
+                    <button class="btn btn--outline btn--sm" id="percentagesFilter">Percentuali</button>
+                </div>
+            </div>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>Andamento Completamenti</h3>
+                    <div style="position: relative; height: 300px;">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3>Frequenza Abitudini</h3>
+                    <div style="position: relative; height: 300px;">
+                        <canvas id="frequencyChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3>Confronto Streak</h3>
+                    <div style="position: relative; height: 300px;">
+                        <canvas id="streakChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3>Distribuzione Giorni</h3>
+                    <div style="position: relative; height: 300px;">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Status Section -->
+        <section class="section" id="status">
+            <div class="section-header">
+                <h2>🏆 Status</h2>
+            </div>
+            <div class="status-content">
+                <div class="level-info card">
+                    <div class="card__body">
+                        <div class="level-header">
+                            <h3 id="currentLevelTitle">Livello 1 - Principiante</h3>
+                            <div class="level-points"><span id="currentPoints">0</span> punti</div>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <div class="progress-text" id="progressText">0 / 250</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="badges-section">
+                    <h3>Badge Raggiunti</h3>
+                    <div class="badges-grid" id="badgesGrid"></div>
+                </div>
+                <div class="levels-table card">
+                    <div class="card__body">
+                        <h3>Sistema Livelli</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Livello</th>
+                                    <th>Titolo</th>
+                                    <th>Punti Richiesti</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Principiante</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Appassionato</td>
+                                    <td>250</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Esperto</td>
+                                    <td>1000</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Maestro</td>
+                                    <td>2500</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Leggenda</td>
+                                    <td>5000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="points-legend card">
+                    <div class="card__body">
+                        <h3>Sistema Punti</h3>
+                        <ul>
+                            <li>+10 punti per ogni completamento</li>
+                            <li>+50 punti ogni 7 giorni consecutivi</li>
+                            <li>+25 punti per ogni riflessione</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Riflessioni Section -->
+        <section class="section" id="riflessioni">
+            <div class="section-header">
+                <h2>💭 Riflessioni</h2>
+            </div>
+            <div class="reflection-form card">
+                <div class="card__body">
+                    <textarea class="form-control" id="reflectionText" placeholder="Scrivi qui le tue riflessioni del giorno..." rows="4"></textarea>
+                    <button class="btn btn--primary" id="saveReflectionBtn">Salva Riflessione</button>
+                </div>
+            </div>
+            <div class="reflections-list" id="reflectionsList"></div>
+        </section>
+
+        <!-- Backup Section -->
+        <section class="section" id="backup">
+            <div class="section-header">
+                <h2>💾 Backup</h2>
+            </div>
+            <div class="backup-actions">
+                <button class="btn btn--primary btn--lg" id="exportBtn">Esporta Dati</button>
+                <button class="btn btn--outline btn--lg" id="importBtn">Importa Dati</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+            </div>
+        </section>
+    </main>
+
+    <!-- Habit Modal -->
+    <div class="modal hidden" id="habitModal">
+        <div class="modal-backdrop" id="habitModalBackdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="habitModalTitle">Aggiungi Nuova Abitudine</h3>
+                <button class="modal-close" id="habitModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="habitForm">
+                    <div class="form-group">
+                        <label class="form-label">Nome Abitudine</label>
+                        <input type="text" class="form-control" id="habitName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Descrizione (facoltativa)</label>
+                        <textarea class="form-control" id="habitDescription" rows="3" placeholder="Aggiungi una descrizione per la tua abitudine..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Colore</label>
+                        <div class="color-picker" id="colorPicker">
+                            <div class="color-option" data-color="#10b981" style="background-color: #10b981;" title="Verde"></div>
+                            <div class="color-option" data-color="#3b82f6" style="background-color: #3b82f6;" title="Blu"></div>
+                            <div class="color-option" data-color="#ef4444" style="background-color: #ef4444;" title="Rosso"></div>
+                            <div class="color-option" data-color="#f97316" style="background-color: #f97316;" title="Arancione"></div>
+                            <div class="color-option" data-color="#8b5cf6" style="background-color: #8b5cf6;" title="Viola"></div>
+                            <div class="color-option" data-color="#ec4899" style="background-color: #ec4899;" title="Rosa"></div>
+                            <div class="color-option" data-color="#14b8a6" style="background-color: #14b8a6;" title="Teal"></div>
+                            <div class="color-option" data-color="#eab308" style="background-color: #eab308;" title="Giallo"></div>
+                        </div>
+                        <input type="hidden" id="habitColor" value="#10b981">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Data di Inizio</label>
+                        <input type="date" class="form-control" id="habitStartDate" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--outline" id="cancelHabitBtn">Annulla</button>
+                <button class="btn btn--primary" id="saveHabitBtn">Salva</button>
+                <button class="btn btn--outline" id="deleteHabitBtn" style="display: none;">Elimina</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day Modal -->
+    <div class="modal hidden" id="dayModal">
+        <div class="modal-backdrop" id="dayModalBackdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="dayModalTitle">Modifica Giorno</h3>
+                <button class="modal-close" id="dayModalClose">×</button>
+            </div>
+            <div class="modal-body" id="dayModalBody">
+                <!-- Day habits will be populated here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--primary" id="closeDayModalBtn">Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Animation -->
+    <div class="floating-animation hidden" id="floatingAnimation">+10 punti!</div>
+
+    <script src="app.js"></script>
+</body>
+</html>
